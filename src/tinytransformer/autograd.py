@@ -30,3 +30,18 @@ class Value:
         out._backward = _backward
 
         return out 
+    
+    def __mul__(self, other: Value) -> Value:
+        out = Value(
+            self.data * other.data,
+            (self, other),
+            "*"
+        )
+
+        def _backward():
+            self.grad += other.grad * out.grad 
+            other.grad += self.grad * out.grad 
+
+        out._backward = _backward
+
+        return out
