@@ -1,5 +1,7 @@
 # src/tinytransformer/autograd.py
 
+import math
+
 class Value:
     def __init__(
         self,
@@ -41,6 +43,31 @@ class Value:
         def _backward():
             self.grad += other.grad * out.grad 
             other.grad += self.grad * out.grad 
+
+        out._backward = _backward
+
+        return out
+    
+    def __truediv__(self, other: Value) -> Value:
+        out = Value(
+            self.data / other.data,
+            (self, other),
+            "/"
+        )
+
+        def _backward():
+            self.grad += 1 / other.data * out.grad
+            other.grad += -self.data / (other.data ** 2) * out.grad
+        
+        out._backward = _backward
+
+        return out
+    
+    def exp(self) -> Value:
+        out = Value(math.exp(self.data), (self,), "exp")
+
+        def _backward():
+            self.grad += out.data * out.grad
 
         out._backward = _backward
 
