@@ -15,3 +15,18 @@ class Value:
 
     def __repr__(self) -> str:
         return f"Value(data={self.data}, grad={self.grad})"
+    
+    def __add__(self, other: Value) -> Value:
+        out = Value(
+            self.data + other.data,
+            (self, other),
+            "+"
+        )
+
+        def _backward():
+            self.grad += out.grad
+            out.grad += self.grad
+
+        out._backward = _backward
+
+        return out 
