@@ -1,7 +1,10 @@
 import pytest
 
 from tinytransformer.autograd import Value
-from tinytransformer.attention import attention_scores, weighted_sum, AttentionHead
+from tinytransformer.attention import (
+    attention_scores, weighted_sum, 
+    AttentionHead, MultiHeadAttention
+)
 
 def test_attention_scores_returns_one_score_per_key():
     query = [Value(1.0), Value(2.0)]
@@ -64,3 +67,18 @@ def test_attention_head_returns_contextualized_vectors():
 
     assert len(outputs) == len(vectors)
     assert all(len(output) == 2 for output in outputs)
+
+
+def test_multi_head_attention_preserves_sequence_shape():
+    mha = MultiHeadAttention(embedding_size=4, num_heads=2)
+
+    vectors = [
+        [Value(1.0), Value(0.0), Value(0.0), Value(0.0)],
+        [Value(0.0), Value(1.0), Value(0.0), Value(0.0)],
+        [Value(0.0), Value(0.0), Value(1.0), Value(0.0)],
+    ]
+
+    outputs = mha(vectors)
+
+    assert len(outputs) == 3
+    assert all(len(output) == 4 for output in outputs)
