@@ -16,7 +16,7 @@ Build a transformer one architectural idea at a time, understanding the motivati
 
 - ✓ Stage 1 — Input Representation
 - ✓ Stage 2 — Self-Attention
-- ☐ Stage 3 — Multi-Head Attention
+- ✓ Stage 3 — Multi-Head Attention
 - ☐ Stage 4 — Transformer Block
 - ☐ Stage 5 — Stacking Blocks
 - ☐ Stage 6 — Character-Level GPT
@@ -129,3 +129,55 @@ Contextualized Token Representations
 ### Limitation Discovered
 
 A single attention head can only learn one way of relating tokens. The next stage introduces multiple attention heads operating in parallel to capture different relationships within the same sequence.
+
+## Stage 3: Multi-Head Attention
+
+The third stage extends self-attention by running multiple independent attention heads in parallel. Rather than relying on a single way of relating tokens, the model learns several different perspectives of the same sequence before combining them into a richer representation.
+
+### Architecture
+
+```text
+Input Embeddings
+        │
+        ▼
+┌───────────────────────────────┐
+│      Attention Head 1         │
+├───────────────────────────────┤
+│      Attention Head 2         │
+├───────────────────────────────┤
+│             ...               │
+├───────────────────────────────┤
+│      Attention Head N         │
+└───────────────────────────────┘
+        │
+        ▼
+Concatenate Head Outputs
+        │
+        ▼
+Output Projection (Linear)
+        │
+        ▼
+Contextualized Token Representations
+```
+
+### Components
+
+- **MultiHeadAttention**
+  - Owns multiple independent attention heads.
+  - Concatenates their outputs before applying a final linear projection.
+- **AttentionHead**
+  - Learns one independent way of relating tokens.
+- **Output Projection**
+  - Learns how to combine the different perspectives produced by each attention head.
+
+### Key Concepts Learned
+
+- One attention head represents one learned perspective on a sequence.
+- Multiple heads operate independently on the same input.
+- Head outputs are concatenated rather than added.
+- A final linear layer learns how to combine information from all heads.
+- Multi-head attention increases expressiveness without changing the external embedding size.
+
+### Limitation Discovered
+
+Although tokens can now exchange information through multiple attention heads, the model still lacks the mechanisms needed to train very deep networks reliably. The next stage introduces residual connections, layer normalization, and the feed-forward network that together form the Transformer Block.
