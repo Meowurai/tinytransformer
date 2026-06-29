@@ -1,7 +1,7 @@
 import pytest
 
 from tinytransformer.autograd import Value
-from tinytransformer.attention import attention_scores, weighted_sum
+from tinytransformer.attention import attention_scores, weighted_sum, AttentionHead
 
 def test_attention_scores_returns_one_score_per_key():
     query = [Value(1.0), Value(2.0)]
@@ -29,3 +29,38 @@ def test_weighted_sum_returns_vector():
     result = weighted_sum(weights, vectors)
 
     assert [v.data for v in result] == pytest.approx([2.6, 3.6])
+
+def test_attention_head_returns_one_vector_per_input_vector():
+    head = AttentionHead(embedding_size=2)
+
+    vectors = [
+        [Value(1.0), Value(0.0)],
+        [Value(0.0), Value(1.0)],
+        [Value(1.0), Value(1.0)],
+    ]
+
+    outputs = head(vectors)
+
+    assert len(outputs) == 3
+    assert all(len(output) == 2 for output in outputs)
+
+
+def test_attention_head_parameters_include_qkv_projections():
+    head = AttentionHead(embedding_size=2)
+
+    assert len(head.parameters()) == 18
+
+
+def test_attention_head_returns_contextualized_vectors():
+    head = AttentionHead(embedding_size=2)
+
+    vectors = [
+        [Value(1.0), Value(0.0)],
+        [Value(0.0), Value(1.0)],
+        [Value(1.0), Value(1.0)],
+    ]
+
+    outputs = head(vectors)
+
+    assert len(outputs) == len(vectors)
+    assert all(len(output) == 2 for output in outputs)

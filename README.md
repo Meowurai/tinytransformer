@@ -15,7 +15,7 @@ Build a transformer one architectural idea at a time, understanding the motivati
 ## Progress
 
 - ✓ Stage 1 — Input Representation
-- ☐ Stage 2 — Self-Attention
+- ✓ Stage 2 — Self-Attention
 - ☐ Stage 3 — Multi-Head Attention
 - ☐ Stage 4 — Transformer Block
 - ☐ Stage 5 — Stacking Blocks
@@ -71,3 +71,61 @@ Input Embeddings
 ### Limitation Discovered
 
 Although every token now knows what it is and where it is, tokens are still independent. They cannot yet exchange information with one another.
+
+## Stage 2: Self-Attention
+
+The second stage introduces the core idea behind the transformer: every token updates its representation by attending to every other token in the sequence.
+
+Rather than keeping a fixed embedding throughout the model, each token continuously builds a contextual representation based on the information contained in the surrounding tokens.
+
+### Architecture
+
+```text
+Input Embeddings
+      │
+      ▼
+Query Projection
+Key Projection
+Value Projection
+      │
+      ▼
+Attention Scores
+      │
+      ▼
+Softmax
+      │
+      ▼
+Attention Weights
+      │
+      ▼
+Weighted Sum of Values
+      │
+      ▼
+Contextualized Token Representations
+```
+
+### Components
+
+- **Linear**
+  - Produces learned Query, Key, and Value projections.
+- **Attention Scores**
+  - Computes a relevance score between one query and every key using the dot product.
+- **Softmax**
+  - Converts raw attention scores into attention weights that sum to one.
+- **Weighted Sum**
+  - Produces a new contextual representation by combining value vectors according to the learned attention weights.
+- **AttentionHead**
+  - Updates every token representation by repeating this process for each token in the sequence.
+
+### Key Concepts Learned
+
+- Token representations are no longer fixed after the embedding layer.
+- Every token compares itself to every other token in the sequence.
+- Queries decide what a token is looking for.
+- Keys decide how relevant each token is.
+- Values contain the information contributed to other tokens.
+- Self-attention creates contextual token representations by combining information from the entire sequence.
+
+### Limitation Discovered
+
+A single attention head can only learn one way of relating tokens. The next stage introduces multiple attention heads operating in parallel to capture different relationships within the same sequence.
