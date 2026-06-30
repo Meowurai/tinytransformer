@@ -19,7 +19,7 @@ Build a transformer one architectural idea at a time, understanding the motivati
 - ✓ Stage 3 — Multi-Head Attention
 - ✓ Stage 4 — Transformer Block
 - ✓ Stage 5 — Stacking Blocks
-- ☐ Stage 6 — Character-Level GPT
+- ✓ Stage 6 — Character-Level GPT
 
 ## Stage 1: Input Representation
 
@@ -286,3 +286,61 @@ Logits
 ### Limitation Discovered
 
 The architecture is now complete, but it does not yet learn. The next stage introduces the training loop, loss function, optimization, and text generation to create a complete character-level GPT.
+
+## Stage 6: Character-Level GPT
+
+The final stage completes the project by connecting every previously implemented component into a trainable character-level GPT. The model can now tokenize text, build training examples, perform forward and backward passes, optimize its parameters using gradient descent, and generate text autoregressively.
+
+Although the implementation is intentionally minimal and computationally inefficient, it demonstrates the complete training and inference pipeline of a transformer language model.
+
+### Architecture
+
+```text
+Raw Text
+    │
+    ▼
+Tokenizer
+    │
+    ▼
+Training Examples
+    │
+    ▼
+Transformer
+    │
+    ▼
+Logits
+    │
+    ▼
+Cross Entropy Loss
+    │
+    ▼
+Backpropagation
+    │
+    ▼
+Gradient Descent
+    │
+    ▼
+Autoregressive Text Generation
+```
+
+### Components
+
+- **Cross Entropy Loss**
+  - Computes the prediction error for every token in the sequence.
+- **Training Utilities**
+  - Reset gradients and update model parameters using gradient descent.
+- **Generation Loop**
+  - Repeatedly predicts the next token and appends it to the context.
+- **Demo Script**
+  - Trains the complete model on Tiny Shakespeare and generates text.
+
+### Key Concepts Learned
+
+- A GPT is a transformer trained for next-token prediction.
+- Training consists of repeated forward passes, loss computation, backpropagation, and parameter updates.
+- Text generation repeatedly feeds the model's own predictions back as input.
+- Every architectural component introduced in earlier stages contributes to the final model.
+
+## Project Summary
+
+This project rebuilt a minimal GPT from first principles, introducing one architectural idea at a time. Rather than treating the transformer as a single complex algorithm, each stage focused on understanding why an individual component exists before implementing it. By the end of the project, the complete training and generation pipeline was assembled from small, reusable building blocks.
