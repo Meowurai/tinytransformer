@@ -19,4 +19,10 @@ def add_vectors(a: list[Value], b: list[Value]) -> list[Value]:
         for a_value, b_value in zip(a, b)
     ]
 
+def add_sequences(a: list[list[Value]], b: list[list[Value]]) -> list[list[Value]]:
+    return [
+        add_vectors(a_vector, b_vector)
+        for a_vector, b_vector in zip(a, b)
+    ]
+
 
