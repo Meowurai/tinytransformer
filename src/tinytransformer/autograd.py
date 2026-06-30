@@ -69,7 +69,7 @@ class Value:
     def __sub__(self, other: Value):
         return self + (-other)
     
-    def __pow__(self, exponent: int | float):
+    def __pow__(self, exponent: int | float) -> Value:
         out = Value(self.data ** exponent, (self,), f"**{exponent}")
 
         def _backward():
@@ -88,7 +88,7 @@ class Value:
 
         return out
     
-    def tanh(self):
+    def tanh(self) -> Value:
         x = self.data
         t = math.tanh(x)
 
@@ -100,3 +100,33 @@ class Value:
         out._backward = _backward
 
         return out
+    
+    def log(self) -> Value:
+        out = Value(math.log(self.data), (self,), "log")
+
+        def _backward():
+            self.grad += (1 / self.data) * out.grad
+
+        out._backward = _backward
+
+        return out
+    
+
+    def backward(self):
+        topo = []
+        visited = set()
+
+        def build_topo(v):
+            if v not in visited:
+                visited.add(v)
+
+                for parent in v._prev:
+                    build_topo(parent)
+                
+                topo.append(v)
+            
+        build_topo(self)
+
+        self.grad = 1.0
+        for node in reversed(topo):
+            node._backward()
