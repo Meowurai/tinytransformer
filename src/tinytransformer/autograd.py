@@ -27,7 +27,7 @@ class Value:
 
         def _backward():
             self.grad += out.grad
-            out.grad += self.grad
+            other.grad += self.grad
 
         out._backward = _backward
 
@@ -41,8 +41,8 @@ class Value:
         )
 
         def _backward():
-            self.grad += other.grad * out.grad 
-            other.grad += self.grad * out.grad 
+            self.grad += other.data * out.grad 
+            other.grad += self.data * out.grad 
 
         out._backward = _backward
 
@@ -61,6 +61,21 @@ class Value:
         
         out._backward = _backward
 
+        return out
+    
+    def __neg__(self):
+        return self * Value(-1.0)
+    
+    def __sub__(self, other: Value):
+        return self + (-other)
+    
+    def __pow__(self, exponent: int | float):
+        out = Value(self.data ** exponent, (self), f"**{exponent}")
+
+        def _backward():
+            self.grad += exponent * (self.data ** (exponent - 1)) * out.grad
+
+        out._backward = _backward
         return out
     
     def exp(self) -> Value:

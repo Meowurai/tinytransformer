@@ -35,3 +35,19 @@ class Linear:
             for row in self.weights
             for weight in row
         ] + self.bias
+    
+
+class LayerNorm:
+    def __call__(self, vector: list[Value]) -> list[Value]:
+        average = sum(vector, start=Value(0.0)) / Value(len(vector))
+        centered = [value - average for value in vector]
+        squared = [value ** 2 for value in centered]
+        avg_squared = sum(squared, start=Value(0.0)) / Value(len(squared))
+        std = avg_squared ** 0.5
+        normalized = [value / std for value in centered]
+        
+        return normalized
+
+
+
+
