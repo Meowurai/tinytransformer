@@ -35,3 +35,15 @@ class Transformer:
             vectors = block(vectors)
 
         return [self.output_projection(vector) for vector in vectors]
+                
+    def parameters(self) -> list[Value]:
+        block_params = []
+        for block in self.blocks:
+            block_params += block.parameters()
+
+        return (
+            self.token_embeddings.parameters()
+            + self.position_embeddings.parameters()
+            + block_params
+            + self.output_projection.parameters()
+        )

@@ -22,3 +22,7 @@ class TransformerBlock:
         vectors = [self.norm2(vector) for vector in vectors]
 
         return vectors
+    
+    def parameters(self) -> list[Value]:
+        return self.attention.parameters() + self.mlp.parameters()
+
