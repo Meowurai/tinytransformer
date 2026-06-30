@@ -17,7 +17,7 @@ Build a transformer one architectural idea at a time, understanding the motivati
 - ✓ Stage 1 — Input Representation
 - ✓ Stage 2 — Self-Attention
 - ✓ Stage 3 — Multi-Head Attention
-- ☐ Stage 4 — Transformer Block
+- ✓ Stage 4 — Transformer Block
 - ☐ Stage 5 — Stacking Blocks
 - ☐ Stage 6 — Character-Level GPT
 
@@ -181,3 +181,59 @@ Contextualized Token Representations
 ### Limitation Discovered
 
 Although tokens can now exchange information through multiple attention heads, the model still lacks the mechanisms needed to train very deep networks reliably. The next stage introduces residual connections, layer normalization, and the feed-forward network that together form the Transformer Block.
+
+## Stage 4: Transformer Block
+
+The fourth stage assembles the transformer's core building block by combining multi-head attention, residual connections, layer normalization, and a feed-forward network into a single reusable unit.
+
+Rather than introducing new mathematical ideas, the transformer block composes previously implemented components into a stable architecture that can be stacked repeatedly to build deep transformer models.
+
+### Architecture
+
+```text
+Input
+  │
+  ▼
+Multi-Head Attention
+  │
+  ▼
+Residual Connection
+  │
+  ▼
+Layer Normalization
+  │
+  ▼
+Feed-Forward Network (MLP)
+  │
+  ▼
+Residual Connection
+  │
+  ▼
+Layer Normalization
+  │
+  ▼
+Output
+```
+
+### Components
+
+- **TransformerBlock**
+  - Orchestrates the complete transformer computation.
+- **Residual Connections**
+  - Preserve the previous representation while learning only the required update.
+- **LayerNorm**
+  - Normalizes each token representation independently to maintain stable numerical scales.
+- **MLP**
+  - Refines each token representation independently after contextual information has been exchanged.
+
+### Key Concepts Learned
+
+- A transformer block is a composition of simpler components rather than a new algorithm.
+- Residual connections learn corrections instead of complete replacements.
+- Layer normalization stabilizes training by keeping token representations well scaled.
+- The MLP performs independent processing after tokens have communicated through attention.
+- Every transformer block preserves the sequence shape and embedding size.
+
+### Limitation Discovered
+
+A single transformer block is useful, but modern transformers achieve their capabilities by stacking many identical blocks. The next stage explores how repeated blocks progressively build richer contextual representations across the entire network.
