@@ -70,7 +70,7 @@ class Value:
         return self + (-other)
     
     def __pow__(self, exponent: int | float):
-        out = Value(self.data ** exponent, (self), f"**{exponent}")
+        out = Value(self.data ** exponent, (self,), f"**{exponent}")
 
         def _backward():
             self.grad += exponent * (self.data ** (exponent - 1)) * out.grad
@@ -84,6 +84,19 @@ class Value:
         def _backward():
             self.grad += out.data * out.grad
 
+        out._backward = _backward
+
+        return out
+    
+    def tanh(self):
+        x = self.data
+        t = math.tanh(x)
+
+        out = Value(t, (self,), "tanh")
+
+        def _backward():
+            self.grad += (1 - t**2) * out.grad
+        
         out._backward = _backward
 
         return out

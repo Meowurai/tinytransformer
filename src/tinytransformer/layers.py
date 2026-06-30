@@ -49,5 +49,20 @@ class LayerNorm:
         return normalized
 
 
+class MLP:
+    def __init__(self, embedding_size: int) -> None:
+        self.up = Linear(embedding_size, embedding_size * 4)
+        self.down = Linear(embedding_size * 4, embedding_size)
+
+    def __call__(self, vector: list[Value]) -> list[Value]:
+        up_vector = self.up(vector)
+        activations = [value.tanh() for value in up_vector]
+        return self.down(activations)
+    
+    def parameters(self) -> list[Value]:
+        return (
+            self.up.parameters()
+            + self.down.parameters()
+        )
 
 
