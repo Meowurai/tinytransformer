@@ -18,7 +18,7 @@ Build a transformer one architectural idea at a time, understanding the motivati
 - ✓ Stage 2 — Self-Attention
 - ✓ Stage 3 — Multi-Head Attention
 - ✓ Stage 4 — Transformer Block
-- ☐ Stage 5 — Stacking Blocks
+- ✓ Stage 5 — Stacking Blocks
 - ☐ Stage 6 — Character-Level GPT
 
 ## Stage 1: Input Representation
@@ -237,3 +237,52 @@ Output
 ### Limitation Discovered
 
 A single transformer block is useful, but modern transformers achieve their capabilities by stacking many identical blocks. The next stage explores how repeated blocks progressively build richer contextual representations across the entire network.
+
+## Stage 5: Stacking Blocks
+
+The fifth stage assembles a complete transformer by stacking multiple transformer blocks. Each block receives the contextual representations produced by the previous block and incrementally refines them.
+
+Rather than introducing new mathematical concepts, this stage focuses on architectural composition. The model is now capable of repeatedly alternating communication between tokens and independent refinement of each token representation.
+
+### Architecture
+
+```text
+Token Embeddings
++
+Position Embeddings
+        │
+        ▼
+Transformer Block
+        ▼
+Transformer Block
+        ▼
+Transformer Block
+        ▼
+...
+        │
+        ▼
+Output Projection
+        │
+        ▼
+Logits
+```
+
+### Components
+
+- **Transformer**
+  - Owns the complete language model architecture.
+- **Transformer Blocks**
+  - Applied sequentially to progressively refine token representations.
+- **Output Projection**
+  - Maps the final contextual token representations to vocabulary logits.
+
+### Key Concepts Learned
+
+- Deep transformers are created by stacking identical transformer blocks.
+- Each block refines representations produced by previous blocks.
+- The architecture remains modular by composing reusable building blocks.
+- The final output layer is simply a linear projection from embedding space to vocabulary logits.
+
+### Limitation Discovered
+
+The architecture is now complete, but it does not yet learn. The next stage introduces the training loop, loss function, optimization, and text generation to create a complete character-level GPT.
